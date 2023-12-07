@@ -2,11 +2,17 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
+import seaborn as sns
 from plotly.subplots import make_subplots
 import json
 import random
+import sys
 
-path = 'Satellites/satellite_above_45.txt'
+# funct irgendwie nicht:
+# sys.path.append( YOUR_PROJECT_DIR )
+# sys.path.append("C:/Users/timol/OneDrive/Documents/Studium/Master/Semester1/DataLiteracy/Satellites/")
+
+path = 'Satellites/Data/satellite_above_45.txt'
 
 def read_json_objects_from_file(file_path):
     with open(file_path, 'r') as file:
@@ -31,6 +37,12 @@ def read_json_objects_from_file(file_path):
 
 def main(plot_plt, plot_px):
     
+    # geyser = sns.load_dataset("geyser")
+    # print(type(geyser))
+    # sns.kdeplot(data=geyser, x="waiting", y="duration")
+    # plt.show()
+    
+    
     data_list = read_json_objects_from_file(path)
     n_samples = len(data_list)
     
@@ -42,25 +54,38 @@ def main(plot_plt, plot_px):
     
     lats = []
     longs = []
+    dfs = []
+    
     for idx in random_indices:
         data = data_list[idx]
         df = pd.DataFrame(data['above'])
         lats.append(df['satlat'])
         longs.append(df['satlng'])
+        dfs.append(df)
         
-   
-    data = data_list[0]
-    data2 = data_list[-1]
-    # print(data['above'])
+    data = pd.concat(dfs, axis=0)
+    data.info()
+    
+    X = data[['satlng', 'satlat']].copy()
+    X = X.iloc[:(len(X) // 4)]
+    X.info()
+    
+    
+    kde = sns.kdeplot(
+        X, 
+        x='satlng', 
+        y='satlat', 
+        fill=True, 
+        # color='r',
+        # palette='rocket', 
+        levels=10
+    )
 
-    df = pd.DataFrame(data['above'])
-    df2 = pd.DataFrame(data2['above'])
-    df.info()
+    plt.title('Kernel Density Estimation')
+    plt.xlabel('Longitude')
+    plt.ylabel('Latitude')
 
-    lat = df['satlat']
-    lat2 = df2['satlat']
-    long = df['satlng']
-    long2 = df2['satlng']
+    plt.show()
 
     if plot_plt:
         fig, ax = plt.subplots()
@@ -76,6 +101,14 @@ def main(plot_plt, plot_px):
         plt.show()
 
     if plot_px:
+        
+        data = data_list[0]
+        data2 = data_list[-1]
+        # print(data['above'])
+
+        df = pd.DataFrame(data['above'])
+        df2 = pd.DataFrame(data2['above'])
+        df.info()
         
         # fig = px.scatter_geo(df,lat='satlat',lon='satlng', hover_name="satid")
         # fig.update_layout(title = 'World map', title_x=0.5)
@@ -104,4 +137,4 @@ def main(plot_plt, plot_px):
 
 
 if __name__ == "__main__":
-    main(plot_plt=True, plot_px=False)
+    main(plot_plt=False, plot_px=False)
