@@ -70,6 +70,9 @@ def main(plot_plt, plot_px):
     X = X.iloc[:(len(X) // 4)]
     X.info()
     
+    # create new labels for satellite types e.g. starlink and not starlink 
+    # append to data dataframe
+    # add as hue to kdeplot to show different distributions in 1 plot
     
     kde = sns.kdeplot(
         X, 
