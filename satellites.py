@@ -63,8 +63,14 @@ def main(plot_plt, plot_px):
         longs.append(df['satlng'])
         dfs.append(df)
         
+
+        
     data = pd.concat(dfs, axis=0)
     data.info()
+    
+    data['is_starlink'] = data['satname'].apply(lambda x: 1 if 'SL-' in x else 0)
+    
+    print(data['is_starlink'].value_counts())
     
     X = data[['satlng', 'satlat']].copy()
     X = X.iloc[:(len(X) // 4)]
@@ -72,19 +78,18 @@ def main(plot_plt, plot_px):
     
     
     kde = sns.kdeplot(
-        X, 
+        data, 
         x='satlng', 
         y='satlat', 
-        fill=True, 
+        hue='is_starlink',
+        fill=False, 
         # color='r',
         # palette='rocket', 
-        levels=10
+        levels=20
     )
-
     plt.title('Kernel Density Estimation')
     plt.xlabel('Longitude')
     plt.ylabel('Latitude')
-
     plt.show()
 
     if plot_plt:
