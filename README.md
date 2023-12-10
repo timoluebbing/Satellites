@@ -6,7 +6,9 @@
 - [ ] plot all points with openstreetmap background (px express or something else)
 - [ ] kernel density estimation (parzen window)
   - [ ] Try different windows
-  - [ ] Try different kernel functions
+  - [ ] Try different kernel functions 
+        - I think we can't use seaborn for that, but have to fight with sklearn.neighbors.KernelDensity and Basemap
+        - maybe this helps: https://scikit-learn.org/stable/auto_examples/neighbors/plot_species_kde.html#sphx-glr-auto-examples-neighbors-plot-species-kde-py
   - [ ] discrete and continous
   - [ ] Plots 
 - [ ] Hypothesis testing:
