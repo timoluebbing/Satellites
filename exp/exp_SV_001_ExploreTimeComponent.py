@@ -9,15 +9,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import ListedColormap
 from scipy import stats
+import math
 
-
-’ ’ ’
+""" 
 exp_SV_001_ExploreTimeComponent.py
 
 Discover changes in satellite density over time.
 
 Sebastian Volz, January 2024
-’ ’ ’
+"""
 
 def read_json_objects_from_file(file_path):
     with open(file_path, 'r') as file:
@@ -41,29 +41,26 @@ def read_json_objects_from_file(file_path):
 
 
 
-path_tue = '../dat/satellite_above_tübingen_90.txt'
+path_tue = '../dat/satellite_above_rome_90.txt'
 
 # TUEBINGEN
 data_list_tue = read_json_objects_from_file(path_tue)
 
+dfs_tue = []
+time_steps_tue = []
+time_steps_tue.append(0)
+ani_length = len(data_list_tue)
+for idx in range(ani_length):
+    data_tue = data_list_tue[idx]
+    df_tue = pd.DataFrame(data_tue['above'])
+    time_steps_tue.append(time_steps_tue[idx] + len(df_tue))
+    dfs_tue.append(df_tue)
+
+data_tue = pd.concat(dfs_tue, axis=0)
+data_tue.info()
 
 def animate_points():
-    lats_tue = []
-    longs_tue = []
-    alts_tue = []
-    dfs_tue = []
 
-    ani_length = len(data_list_tue)
-    for idx in range(ani_length):
-        data_tue = data_list_tue[idx]
-        df_tue = pd.DataFrame(data_tue['above'])
-        lats_tue.append(df_tue['satlat'])
-        longs_tue.append(df_tue['satlng'])
-        alts_tue.append(df_tue['satalt'])
-        dfs_tue.append(df_tue)
-
-    data_tue = pd.concat(dfs_tue, axis=0)
-    data_tue.info()
 
     df = data_tue
 
@@ -93,10 +90,12 @@ def animate_points():
 
     # Define the update function
     def update(frame):
-        start_idx = frame * 3100
-        end_idx = (frame + 1) * 3100
+        start_idx = time_steps_tue[frame]
+        end_idx = time_steps_tue[frame+1]
         df_frame = df.iloc[start_idx:end_idx]
         #df_filtered = df_frame[df_frame['satname'].str.contains("STARLINK", case=False, na=False)]
+
+        #df_frame = df_filtered
         title = data_list_tue[frame]["date"]
         #height = df_filtered["satalt"]
         if 'satlat' in df_frame.columns and 'satlng' in df_frame.columns:
@@ -114,12 +113,17 @@ def animate_points():
 
     # Create the animation
     ani = animation.FuncAnimation(fig, update, frames=num_frames, init_func=init, interval=100)
-    #ani.save('animation.mp4', writer='ffmpeg', fps=20)
+    ani.save('../allsatellites_15min_world.mp4', writer='ffmpeg', fps=20)
     # Display the animation
     plt.show()
 
 
-def animate_desnity():
+# doesnt work
+
+def animate_density():
+    def has_nan_or_inf(lst):
+        return any(math.isnan(x) or math.isinf(x) for x in lst)
+
     # KERNEL DENSITY:
     # Color map
     cmap = plt.get_cmap('CMRmap')
@@ -132,8 +136,11 @@ def animate_desnity():
 
         h = projection.transform_points(geo, lats, longs)[:, :2].T
 
-        kde = stats.gaussian_kde(h)
+        zw1 = [x for x in h[0] if not (math.isnan(x) or math.isinf(x))]
+        zw2 = [x for x in h[1] if not (math.isnan(x) or math.isinf(x))]
+        h = [zw1, zw2]
 
+        kde = stats.gaussian_kde(h)
         # Coordinates of the four corners of the map.
         x0, x1, y0, y1 = extend
         # Create the grid.
@@ -162,7 +169,7 @@ def animate_desnity():
     # Plot the heat map
     ax = plt.axes(projection=crs_round)
     ax.coastlines()
-    ax.stock_img() # Add a stock background image
+    #ax.stock_img() # Add a stock background image
     ax.imshow(v, origin='lower',
               extent=extend_transf,
             interpolation='bilinear',
@@ -171,4 +178,4 @@ def animate_desnity():
 
 
 if __name__ == "__main__":
-    animate_points()
+    animate_density()
