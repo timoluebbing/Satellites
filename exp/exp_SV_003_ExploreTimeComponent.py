@@ -11,13 +11,13 @@ from matplotlib.colors import ListedColormap
 from scipy import stats
 
 
-’ ’ ’
+"""
 exp_SV_001_ExploreTimeComponent.py
 
 Discover changes in satellite density over time.
 
 Sebastian Volz, January 2024
-’ ’ ’
+"""
 
 def read_json_objects_from_file(file_path):
     with open(file_path, 'r') as file:
