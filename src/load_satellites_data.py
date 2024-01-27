@@ -25,34 +25,34 @@ def read_json_objects_from_file(file_path):
                 data_list.append(data)
             except json.JSONDecodeError as e:
                 print(f"Error decoding JSON object {index}: {e}")
-                
         return data_list
     
-    
-def load_satellites_data(file_path, n_samples=None):
+
+
+def load_satellites_data(file_path, n_samples=None, random=True):
     data_list = read_json_objects_from_file(file_path)
-    
+
     if n_samples is None:
         n_samples = len(data_list)
-    
-    sample_idx = np.arange(n_samples)
-    random_indices = np.random.choice(sample_idx, size=n_samples)
 
     lats, longs, alts, dfs = [], [], [], []
 
-    for idx in random_indices:
+    sample_idx = np.arange(n_samples)
+    random_indices = np.random.choice(sample_idx, size=n_samples)
+
+    indices = random_indices if random else range(n_samples)
+    for idx in indices:
         data = data_list[idx]
         df = pd.DataFrame(data['above'])
         lats.append(df['satlat'])
         longs.append(df['satlng'])
         alts.append(df['satalt'])
         dfs.append(df)
-        
+
     data = pd.concat(dfs, axis=0)
     data.info()
-    
-    return data
 
+    return data
 
 def filter_data_tue(data_tue):
     # Filter by euclidean distance to Tübingen
