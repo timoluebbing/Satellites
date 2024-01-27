@@ -1,4 +1,4 @@
-# Satellites: What's the probability of being hit by a satellite?
+# Satellite Density Evaluation: Investigating Satellite Presence above Tübingen
 
 ## Qualitative results: 
 Danger heat maps in the area around Tübingen. Satellite density estimations for the total data capture and specifically Starlink satellites. The high-density belt above 50° N corresponds to the operational border of Starlink satellites visualized in the animation below.
@@ -29,5 +29,4 @@ Source code for data loading and kernel density estimation is provided in the sc
 Our captured satellites dataset can be found in the dat folder. We provide the functionality to collect your own data samples for different capture length and intervals. You can find the shell scripts [api_call.sh](src/data_collection/api_call.sh) and [run.sh](src/data_collection/run.sh) in the src/data_collection folder.
 
 ## Contribution
-
-Sebastian Volz collected satellites data using API calls and was responsible for satellite animations. Meike Oschmann and Timo Lübbing performed the data preparation and analysis by means of kernel density estimation. Both contributed to producing visualizations. All authors jointly wrote the text of this report. In general, each team member contributed equally in work. 
+Sebastian Volz collected satellites data using API calls and was responsible for satellite animations. Meike Oschmann and Timo Lübbing performed the data preparation and analysis by means of kernel density estimation. Both contributed to producing visualizations. All authors jointly wrote the text of this [report](doc/report.pdf). In general, each team member contributed equally in work. 
