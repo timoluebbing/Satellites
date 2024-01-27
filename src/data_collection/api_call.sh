@@ -23,8 +23,8 @@ make_request() {
 }
 
 # Coordinates
-latitude=48.782536
-longitude=9.176995
+latitude=48.5269
+longitude=9.0632
 alpha=90
 
 # API Key
