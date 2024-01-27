@@ -53,6 +53,26 @@ def load_satellites_data(file_path, n_samples=None):
     
     return data
 
+def load_satellites_data_sorted(file_path, n_samples=None):
+    data_list = read_json_objects_from_file(file_path)
+
+    if n_samples is None:
+        n_samples = len(data_list)
+
+    lats, longs, alts, dfs = [], [], [], []
+
+    for idx in range(n_samples):
+        data = data_list[idx]
+        df = pd.DataFrame(data['above'])
+        lats.append(df['satlat'])
+        longs.append(df['satlng'])
+        alts.append(df['satalt'])
+        dfs.append(df)
+
+    data = pd.concat(dfs, axis=0)
+    data.info()
+
+    return data
 
 def filter_data_tue(data_tue):
     # Filter by euclidean distance to Tübingen
