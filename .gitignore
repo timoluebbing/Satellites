@@ -2,3 +2,4 @@ dat/
 myenv/
 Data/
 .idea/
+src/__pycache__

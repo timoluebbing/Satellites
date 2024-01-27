@@ -48,8 +48,8 @@ data_list_tue = read_json_objects_from_file(path_tue)
 
 dfs_tue = []
 time_steps_tue = []
-time_steps_tue.append(0)
 ani_length = len(data_list_tue)
+time_steps_tue.append(0)
 for idx in range(ani_length):
     data_tue = data_list_tue[idx]
     df_tue = pd.DataFrame(data_tue['above'])
@@ -74,7 +74,7 @@ def animate_points(animation_name,  zoom, base_color, base_legend, only_starlink
 
     # Initialize scatter plots
     scatter_base = ax.scatter([], [], color=base_color, marker='o', s=5, label=base_legend, transform=ccrs.PlateCarree())
-    scatter_single = ax.scatter([], [], color=single_point_color, marker='o', s=5, label='STARLINK-1226',
+    scatter_single = ax.scatter([], [], color=single_point_color, marker='o', s=5, label=single_point_name,
                                    transform=ccrs.PlateCarree())
 
     # Customize other plot elements if needed
@@ -106,8 +106,8 @@ def animate_points(animation_name,  zoom, base_color, base_legend, only_starlink
         else:
             scatter_base.set_offsets(df_frame[['satlng', 'satlat']].values)
 
-        scatter_single.set_offsets(
-            df_frame[df_frame['satname'] == single_point_name][['satlng', 'satlat']].values)
+        is_single = df_frame['satname'].str.contains(single_point_name, case=False, na=False)
+        scatter_single.set_offsets(df_frame[is_single][['satlng', 'satlat']].values)
 
         title = data_list_tue[frame]["date"]
         ax.set_title(title)
@@ -118,14 +118,14 @@ def animate_points(animation_name,  zoom, base_color, base_legend, only_starlink
     ax.legend(loc='upper left')
 
     # Calculate the number of frames based on the size of each time frame
-    num_frames = len(df) // 3100
+    num_frames = ani_length-1
 
 
 
 
     # Create the animation
-    ani = animation.FuncAnimation(fig, update, frames=num_frames, init_func=init, interval=100)
-    ani.save(f'../doc/animation/{animation_name}.mp4', writer='ffmpeg', fps=20)
+    ani = animation.FuncAnimation(fig, update, frames=num_frames, init_func=init, interval=80)
+    ani.save(f'../doc/animation/{animation_name}.mp4', writer='ffmpeg', fps=50)
     # Display the animation
     plt.show()
 
@@ -191,5 +191,5 @@ def animate_density():
 
 if __name__ == "__main__":
     animate_points(animation_name="starlink_5sek_europe", zoom=True, base_color="blue", base_legend="Starlink",
-                   only_starlink=True, single_point_name="STARLINK-1227",
+                   only_starlink=True, single_point_name="STARLINK-1",
                    single_point_color="red")
