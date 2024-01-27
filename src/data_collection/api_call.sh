@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# api_call.sh
+# create GET request to n2yo api to retrieve satellite positions above location x with degree alpha and
+# and write to output file.
+# Sebastian Volz, Januar 2024
+
 # Function to make the GET request and append response with timestamp to the file
 make_request() {
       # Accept API URL as first argument
@@ -17,13 +22,17 @@ make_request() {
     echo "Request at $TIMESTAMP to $API_URL completed and appended to $OUTPUT_FILE"
 }
 
+# Coordinates
+latitude=48.782536
+longitude=9.176995
+alpha=90
 
-API_URL="https://api.n2yo.com/rest/v1/satellite/above/48.782536/9.176995/0/90/0/&apiKey=3HYWGU-QTAEST-5JUAFV-55O6"
+# API Key
+api_key="3HYWGU-QTAEST-5JUAFV-55O6"
+
+# Construct API URL with variables
+API_URL="https://api.n2yo.com/rest/v1/satellite/above/$latitude/$longitude/0/$alpha/0/&apiKey=$api_key"
 OUTPUT_FILE="satellite_above_tue_90_5sek.txt"  # Accept output file as second argument
 
-# Call make_request function with API URL and output file arguments
-make_request 
-
-API_URL="https://api.n2yo.com/rest/v1/satellite/above/41.52/12.29/0/90/0/&apiKey=3HYWGU-QTAEST-5JUAFV-55O6"
-OUTPUT_FILE="satellite_above_rome_45.txt"  # Accept output file as second argument
+make_request
 
