@@ -125,7 +125,7 @@ def animate_points(animation_name,  zoom, base_color, base_legend, only_starlink
 
     # Create the animation
     ani = animation.FuncAnimation(fig, update, frames=num_frames, init_func=init, interval=80)
-    ani.save(f'../doc/animation/{animation_name}.mp4', writer='ffmpeg', fps=50)
+    ani.save(f'../doc/animation/{animation_name}.mp4', writer='ffmpeg', fps=30)
     # Display the animation
     plt.show()
 
@@ -191,5 +191,5 @@ def animate_density():
 
 if __name__ == "__main__":
     animate_points(animation_name="starlink_5sek_europe", zoom=True, base_color="blue", base_legend="Starlink",
-                   only_starlink=True, single_point_name="STARLINK-1",
+                   only_starlink=True, single_point_name="STARLINK-1*",
                    single_point_color="red")
