@@ -1,0 +1,7 @@
+numpy
+pandas
+json
+matplotlib
+scipy
+cartopy
+tueplots
